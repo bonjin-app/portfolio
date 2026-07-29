@@ -8,15 +8,11 @@ import {
 import {
   ArrowLeft,
   Code2,
-  Feather,
   Globe2,
-  Image,
   Mail,
   MessageCircle,
-  MonitorSmartphone,
-  ShieldCheck,
 } from 'lucide-react';
-import { skills, works } from './data';
+import { services, skills, works } from './data';
 
 const routeContext = createContext('/');
 
@@ -26,37 +22,6 @@ const navItems = [
   ['Services', '/services'],
   ['Works', '/works'],
   ['Contact', '/contact'],
-];
-
-const services = [
-  {
-    title: 'Security',
-    content: 'Strict security system.',
-    items: [
-      'Per User Permissions',
-      'Communication encryption',
-      'Personal information security',
-    ],
-    icon: ShieldCheck,
-  },
-  {
-    title: 'Mobile Applications',
-    content: 'Mobile convenience features.',
-    items: ['Simple operation'],
-    icon: MonitorSmartphone,
-  },
-  {
-    title: 'UX & UI Design',
-    content: 'Neat design.',
-    items: ['Easy to see UI UX', 'Preferred design'],
-    icon: Image,
-  },
-  {
-    title: 'Light',
-    content: 'Fast and light.',
-    items: ['Smooth movement'],
-    icon: Feather,
-  },
 ];
 
 function getRoute() {
@@ -94,6 +59,31 @@ function ScrollToTop() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [route]);
+
+  return null;
+}
+
+function DocumentTitle() {
+  const route = useRoute();
+
+  useEffect(() => {
+    const staticTitles = {
+      '/': 'Bonjin Portfolio',
+      '/about': 'About Me',
+      '/services': 'Services',
+      '/works': 'Works',
+      '/contact': 'Contact',
+    };
+    const work = route.startsWith('/works/')
+      ? works.find((item) => item.slug === route.slice('/works/'.length))
+      : null;
+    const pageTitle = work?.name || staticTitles[route] || 'Page not found';
+
+    document.title =
+      pageTitle === 'Bonjin Portfolio'
+        ? pageTitle
+        : `${pageTitle} — Bonjin Portfolio`;
   }, [route]);
 
   return null;
@@ -167,14 +157,7 @@ function Header() {
                 <em>
                   Team Bonjin.
                   <br />
-                  <a
-                    href="https://open.kakao.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-white/70 hover:text-white"
-                  >
-                    Kakao Talk
-                  </a>
+                  Available for web &amp; app projects.
                 </em>
               </p>
             </div>
@@ -292,18 +275,23 @@ function Portfolio({ showIntro = true }) {
             <h1 className="mb-2 font-heading text-[2rem] leading-tight">
               Hey, We are Bonjin Team
             </h1>
-            <p className="text-[#777]">Professional web & app developer</p>
+            <p className="text-[#777]">Web &amp; app development team</p>
           </div>
         ) : (
           <div />
         )}
-        <div className="filters animate-fade-up lg:text-right">
+        <div
+          className="filters animate-fade-up lg:text-right"
+          role="group"
+          aria-label="Filter projects"
+        >
           {['All', 'Web', 'App'].map((item) => (
             <button
               key={item}
               type="button"
               onClick={() => setFilter(item)}
               className={filter === item ? 'active' : ''}
+              aria-pressed={filter === item}
             >
               {item}
             </button>
@@ -338,11 +326,11 @@ function WorkCard({ work }) {
 function Services({ wide = false }) {
   return (
     <div className={`grid gap-y-12 sm:grid-cols-2 ${wide ? '' : 'lg:grid-cols-4'}`}>
-      {services.map(({ title, content, items, icon: Icon }) => (
+      {services.map(({ title, description, items, icon: Icon }) => (
         <article key={title} className={wide ? 'mb-2 pr-10' : 'pr-8'}>
           <Icon className="mb-6 size-12 stroke-[1.25]" />
           <h2 className="mb-2 font-heading text-base font-semibold">{title}</h2>
-          <p className="mb-4 text-[#777]">{content}</p>
+          <p className="mb-4 text-[#777]">{description}</p>
           <ul className="list-line">
             {items.map((item) => (
               <li key={item}>{item}</li>
@@ -362,7 +350,10 @@ function HomePage() {
       </section>
 
       <section className="site-section site-container">
-        <SectionTitle title="Technology used" subtitle="It uses a variety of techniques." />
+        <SectionTitle
+          title="Technology used"
+          subtitle="A focused toolkit for useful digital products."
+        />
         <div className="grid grid-cols-3 items-center">
           {['adobe', 'apple', 'google'].map((brand) => (
             <div key={brand} className="px-4 sm:px-8">
@@ -379,7 +370,7 @@ function HomePage() {
       <section className="site-section site-container">
         <SectionTitle
           title="My Services"
-          subtitle="We have made great service through various technologies."
+          subtitle="Thoughtful solutions across web, mobile, and design."
         />
         <Services />
       </section>
@@ -419,7 +410,7 @@ function AboutPage() {
     <section className="site-section site-container">
       <Intro
         title="About Me"
-        description="I am a web & app developer. We actively solve problems."
+        description="I build practical web and mobile products with care."
       />
       <div className="grid gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
@@ -455,7 +446,7 @@ function ServicesPage() {
     <section className="site-section site-container">
       <Intro
         title="My Services"
-        description="We have made great service through various technologies."
+        description="Thoughtful solutions across web, mobile, and design."
       />
       <div className="pt-12">
         <Services wide />
@@ -481,15 +472,14 @@ function WorkDetailPage({ slug }) {
 
   return (
     <section className="site-section site-container">
-      <Intro title="Work Detail Page" description="Job details page." />
+      <Intro title={work.name} description={`${work.type} project`} />
       <div className="grid gap-10 md:grid-cols-12">
         <div className="md:col-span-8">
           <img src={work.image} alt={`${work.name} project`} className="w-full" />
         </div>
         <aside className="md:col-span-3 md:col-start-10">
           <div className="md:sticky md:top-0">
-            <h1 className="mb-1 font-heading text-xl">{work.name}</h1>
-            <p className="mb-6 text-[#777]">{work.type}</p>
+            <h2 className="mb-4 font-heading text-xl">Project Overview</h2>
             <p className="mb-8 text-[#777]">{work.description}</p>
             <h2 className="mb-4 font-heading text-base font-semibold">What I did</h2>
             <ul className="list-line mb-8">
@@ -497,14 +487,20 @@ function WorkDetailPage({ slug }) {
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <a
-              href={work.site}
-              target="_blank"
-              rel="noreferrer"
-              className="readmore"
-            >
-              Visit Website
-            </a>
+            {work.site ? (
+              <a
+                href={work.site}
+                target="_blank"
+                rel="noreferrer"
+                className="readmore"
+              >
+                {work.siteLabel}
+              </a>
+            ) : (
+              <span className="readmore project-status" aria-label="비공개 프로젝트">
+                {work.siteLabel}
+              </span>
+            )}
           </div>
         </aside>
       </div>
@@ -540,7 +536,10 @@ function ContactPage() {
 
   return (
     <section className="site-section site-container">
-      <Intro title="Contact" description="Please contact" />
+      <Intro
+        title="Contact"
+        description="Tell me about your next web or app project."
+      />
       <div className="grid gap-12 md:grid-cols-12">
         <form onSubmit={submit} className="md:col-span-6">
           <div className="grid gap-x-6 sm:grid-cols-2">
@@ -558,11 +557,14 @@ function ContactPage() {
             <textarea name="message" rows="10" required />
           </FormField>
           <button type="submit" className="readmore w-full sm:w-auto">
-            Send Message
+            Open Email App
           </button>
+          <p className="mt-3 text-sm text-[#777]">
+            입력한 내용은 이메일 앱에서 확인한 후 전송됩니다.
+          </p>
           {ready && (
-            <p className="mt-4 text-sm text-[#777]">
-              이메일 앱에서 내용을 확인한 후 전송해 주세요.
+            <p className="mt-2 text-sm text-ink" role="status" aria-live="polite">
+              이메일 앱을 열었습니다. 내용을 확인한 후 전송해 주세요.
             </p>
           )}
         </form>
@@ -577,8 +579,12 @@ function ContactPage() {
               gigas-blog.tistory.com
             </a>
           </ContactItem>
-          <ContactItem title="Phone">+82 10 5054 5654</ContactItem>
-          <ContactItem title="Email">bonjin.app@gmail.com</ContactItem>
+          <ContactItem title="Phone">
+            <a href="tel:+821050545654">+82 10 5054 5654</a>
+          </ContactItem>
+          <ContactItem title="Email">
+            <a href="mailto:bonjin.app@gmail.com">bonjin.app@gmail.com</a>
+          </ContactItem>
         </aside>
       </div>
     </section>
@@ -633,6 +639,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
+      <DocumentTitle />
       <Header />
       <main>
         <CurrentPage />

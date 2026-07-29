@@ -7,7 +7,8 @@ export const works = [
     type: 'Web',
     description: 'The first portfolio project that started the Bonjin journey.',
     image: '/images/work/genius-choi.png',
-    site: 'https://gigas-blog.tistory.com',
+    site: 'https://github.com/bonjin-app/portfolio.2015',
+    siteLabel: 'View Project Archive',
     technologies: ['Design', 'HTML5 / CSS3', 'JavaScript'],
   },
   {
@@ -17,6 +18,7 @@ export const works = [
     description: '오래전부터 제주에서 이어져 온 생활방언을 쉽고 편하게 만나는 앱입니다.',
     image: '/images/work/jeju-living-dialect.png',
     site: 'https://www.slunecnice.cz/android/sw/jejusaenghwalbang-eon/',
+    siteLabel: 'View App Archive',
     technologies: ['Java', 'Spring Boot', 'Kotlin', 'Open API'],
   },
   {
@@ -25,7 +27,8 @@ export const works = [
     type: 'Web',
     description: '아이돌 정보를 한곳에서 관리하기 위해 만든 웹 프로젝트입니다.',
     image: '/images/work/idol-manager.svg',
-    site: 'https://github.com/bonjin-app',
+    site: null,
+    siteLabel: 'Private Archive',
     technologies: ['Java', 'Spring Boot', 'JPA', 'HTML5 / CSS3', 'JavaScript'],
   },
   {
@@ -35,6 +38,7 @@ export const works = [
     description: '제주어 생활방언과 속담, 제주 문화 이야기를 전하는 모바일 앱입니다.',
     image: '/images/work/jejutmalsami.webp',
     site: 'https://apps.apple.com/kr/app/id1559855381',
+    siteLabel: 'View on App Store',
     technologies: ['Dart', 'Flutter', 'Swift', 'Kotlin', 'Open API'],
   },
 ];
