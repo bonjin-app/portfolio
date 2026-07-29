@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">아이돌 관리자 대시보드</title>
+  <desc id="desc">아이돌 그룹, 멤버, 상품과 사용자를 관리하는 웹 대시보드 화면</desc>
+  <defs>
+    <linearGradient id="sidebar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4e73df"/>
+      <stop offset="1" stop-color="#224abe"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#263238" flood-opacity=".1"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="900" fill="#f8f9fc"/>
+  <rect width="198" height="900" fill="url(#sidebar)"/>
+
+  <circle cx="58" cy="58" r="26" fill="#fff" fill-opacity=".16"/>
+  <path d="M46 62c8-4 14-13 16-23 7 8 14 12 23 14-4 15-12 25-24 30-11-5-19-12-23-23 3 1 5 2 8 2Z" fill="#fff"/>
+  <text x="96" y="67" fill="#fff" font-family="Arial, sans-serif" font-size="22" font-weight="700">IDOL ADMIN</text>
+  <path d="M20 106h158" stroke="#fff" stroke-opacity=".18"/>
+
+  <g font-family="Arial, sans-serif" font-size="17" fill="#fff">
+    <rect x="14" y="132" width="170" height="48" rx="7" fill="#fff" fill-opacity=".14"/>
+    <circle cx="41" cy="156" r="7" fill="#fff"/>
+    <text x="62" y="162" font-weight="700">대시보드</text>
+
+    <circle cx="41" cy="220" r="7" fill="#fff" fill-opacity=".65"/>
+    <text x="62" y="226" fill-opacity=".78">사용자 관리</text>
+
+    <circle cx="41" cy="278" r="7" fill="#fff" fill-opacity=".65"/>
+    <text x="62" y="284" fill-opacity=".78">아이돌 그룹</text>
+
+    <circle cx="41" cy="336" r="7" fill="#fff" fill-opacity=".65"/>
+    <text x="62" y="342" fill-opacity=".78">아이돌 개인</text>
+
+    <circle cx="41" cy="394" r="7" fill="#fff" fill-opacity=".65"/>
+    <text x="62" y="400" fill-opacity=".78">상품 관리</text>
+  </g>
+
+  <rect x="198" width="702" height="84" fill="#fff"/>
+  <circle cx="844" cy="42" r="20" fill="#e5e7eb"/>
+  <circle cx="844" cy="36" r="7" fill="#9ca3af"/>
+  <path d="M832 54c2-8 7-12 12-12s10 4 12 12" fill="#9ca3af"/>
+  <text x="770" y="48" fill="#858796" font-family="Arial, sans-serif" font-size="14">관리자</text>
+
+  <g font-family="Arial, sans-serif">
+    <text x="238" y="141" fill="#3a3b45" font-size="29" font-weight="700">Dashboard</text>
+    <text x="238" y="170" fill="#858796" font-size="14">아이돌 서비스 통합 관리</text>
+  </g>
+
+  <g filter="url(#shadow)" font-family="Arial, sans-serif">
+    <rect x="238" y="210" width="138" height="128" rx="8" fill="#fff"/>
+    <rect x="238" y="210" width="6" height="128" rx="3" fill="#4e73df"/>
+    <text x="263" y="249" fill="#4e73df" font-size="13" font-weight="700">사용자</text>
+    <text x="263" y="294" fill="#5a5c69" font-size="31" font-weight="700">1,284</text>
+    <circle cx="342" cy="275" r="18" fill="#4e73df" fill-opacity=".1"/>
+    <path d="M334 279c2-7 5-10 8-10s6 3 8 10M342 268a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" fill="none" stroke="#4e73df" stroke-width="3"/>
+
+    <rect x="392" y="210" width="138" height="128" rx="8" fill="#fff"/>
+    <rect x="392" y="210" width="6" height="128" rx="3" fill="#1cc88a"/>
+    <text x="417" y="249" fill="#1cc88a" font-size="13" font-weight="700">아이돌 그룹</text>
+    <text x="417" y="294" fill="#5a5c69" font-size="31" font-weight="700">48</text>
+    <circle cx="496" cy="275" r="18" fill="#1cc88a" fill-opacity=".1"/>
+    <path d="M486 282h20M490 278v-17h12v17M496 261v-6" fill="none" stroke="#1cc88a" stroke-width="3"/>
+
+    <rect x="546" y="210" width="138" height="128" rx="8" fill="#fff"/>
+    <rect x="546" y="210" width="6" height="128" rx="3" fill="#36b9cc"/>
+    <text x="571" y="249" fill="#36b9cc" font-size="13" font-weight="700">아이돌 개인</text>
+    <text x="571" y="294" fill="#5a5c69" font-size="31" font-weight="700">312</text>
+    <circle cx="650" cy="275" r="18" fill="#36b9cc" fill-opacity=".1"/>
+    <path d="M641 282c2-7 5-10 9-10s7 3 9 10M650 269a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" fill="none" stroke="#36b9cc" stroke-width="3"/>
+
+    <rect x="700" y="210" width="162" height="128" rx="8" fill="#fff"/>
+    <rect x="700" y="210" width="6" height="128" rx="3" fill="#f6c23e"/>
+    <text x="725" y="249" fill="#c99a17" font-size="13" font-weight="700">등록 상품</text>
+    <text x="725" y="294" fill="#5a5c69" font-size="31" font-weight="700">96</text>
+    <circle cx="826" cy="275" r="18" fill="#f6c23e" fill-opacity=".13"/>
+    <path d="M817 267h18l-2 15h-14Z M821 267c0-5 2-8 5-8s5 3 5 8" fill="none" stroke="#d7a522" stroke-width="3"/>
+  </g>
+
+  <g filter="url(#shadow)" font-family="Arial, sans-serif">
+    <rect x="238" y="374" width="624" height="440" rx="8" fill="#fff"/>
+    <text x="268" y="419" fill="#4e73df" font-size="18" font-weight="700">최근 등록 아이돌</text>
+    <path d="M238 441h624" stroke="#e3e6f0"/>
+
+    <rect x="268" y="470" width="564" height="48" rx="5" fill="#f4f6fb"/>
+    <text x="292" y="500" fill="#858796" font-size="13" font-weight="700">이름</text>
+    <text x="470" y="500" fill="#858796" font-size="13" font-weight="700">그룹</text>
+    <text x="620" y="500" fill="#858796" font-size="13" font-weight="700">상태</text>
+    <text x="760" y="500" fill="#858796" font-size="13" font-weight="700">관리</text>
+
+    <g fill="#5a5c69" font-size="15">
+      <circle cx="294" cy="552" r="18" fill="#e9d5ff"/>
+      <text x="326" y="558">김하나</text><text x="470" y="558">Aurora</text>
+      <rect x="620" y="540" width="58" height="24" rx="12" fill="#d1fae5"/>
+      <text x="635" y="557" fill="#15803d" font-size="12">활동중</text>
+      <text x="760" y="558" fill="#4e73df">상세보기</text>
+
+      <path d="M268 586h564" stroke="#eef0f5"/>
+      <circle cx="294" cy="622" r="18" fill="#dbeafe"/>
+      <text x="326" y="628">이준</text><text x="470" y="628">FRAME</text>
+      <rect x="620" y="610" width="58" height="24" rx="12" fill="#dbeafe"/>
+      <text x="635" y="627" fill="#2563eb" font-size="12">준비중</text>
+      <text x="760" y="628" fill="#4e73df">상세보기</text>
+
+      <path d="M268 656h564" stroke="#eef0f5"/>
+      <circle cx="294" cy="692" r="18" fill="#fee2e2"/>
+      <text x="326" y="698">박소라</text><text x="470" y="698">Mellow</text>
+      <rect x="620" y="680" width="58" height="24" rx="12" fill="#d1fae5"/>
+      <text x="635" y="697" fill="#15803d" font-size="12">활동중</text>
+      <text x="760" y="698" fill="#4e73df">상세보기</text>
+
+      <path d="M268 726h564" stroke="#eef0f5"/>
+      <circle cx="294" cy="762" r="18" fill="#fef3c7"/>
+      <text x="326" y="768">최유진</text><text x="470" y="768">LUNE</text>
+      <rect x="620" y="750" width="58" height="24" rx="12" fill="#d1fae5"/>
+      <text x="635" y="767" fill="#15803d" font-size="12">활동중</text>
+      <text x="760" y="768" fill="#4e73df">상세보기</text>
+    </g>
+  </g>
+</svg>
