@@ -15,8 +15,8 @@ export const works = [
     name: '제주 생활방언',
     type: 'App',
     description: '오래전부터 제주에서 이어져 온 생활방언을 쉽고 편하게 만나는 앱입니다.',
-    image: '/images/work/jeju-living-dialect.webp',
-    site: 'https://apps.apple.com/kr/app/id1559855381',
+    image: '/images/work/jeju-living-dialect.png',
+    site: 'https://www.slunecnice.cz/android/sw/jejusaenghwalbang-eon/',
     technologies: ['Java', 'Spring Boot', 'Kotlin', 'Open API'],
   },
   {
