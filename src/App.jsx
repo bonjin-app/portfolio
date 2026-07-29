@@ -107,19 +107,36 @@ function Header() {
     setMenuOpen(false);
   }, [route]);
 
+  useEffect(() => {
+    if (!menuOpen) {
+      return undefined;
+    }
+
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <>
       <div
         id="main-navbar"
         aria-hidden={!menuOpen}
         inert={!menuOpen}
-        className={`grid overflow-hidden bg-ink text-white transition-[grid-template-rows] duration-300 ${
+        className={`overflow-hidden bg-ink text-white transition-[max-height,opacity,visibility] duration-300 ${
           menuOpen
-            ? 'visible grid-rows-[1fr]'
-            : 'invisible grid-rows-[0fr] pointer-events-none'
+            ? 'visible max-h-[440px] opacity-100'
+            : 'invisible max-h-0 pointer-events-none opacity-0'
         }`}
       >
-        <div className="min-h-0">
+        <div>
           <div className="site-container grid gap-10 py-8 md:grid-cols-12 md:py-14">
             <nav className="md:col-span-2" aria-label="Main menu">
               <ul className="space-y-0">
@@ -130,6 +147,7 @@ function Header() {
                     <li key={path} className="text-xl">
                       <Link
                         to={path}
+                        onClick={closeMenu}
                         aria-current={active ? 'page' : undefined}
                         className={`inline-block py-1.5 text-white ${
                           active ? 'underline' : ''
@@ -179,7 +197,11 @@ function Header() {
       </div>
 
       <header className="site-container flex items-start justify-between pt-[50px]">
-        <Link to="/" className="font-heading text-[1.7rem] text-ink">
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="font-heading text-[1.7rem] text-ink"
+        >
           Bonjin Portfolio.
         </Link>
         <button
