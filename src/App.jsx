@@ -7,15 +7,18 @@ import {
 } from 'react';
 import {
   ArrowLeft,
-  ArrowUpRight,
-  Camera,
   Code2,
+  Feather,
+  Globe2,
+  Image,
   Mail,
-  Menu,
   MessageCircle,
-  X,
+  MonitorSmartphone,
+  ShieldCheck,
 } from 'lucide-react';
-import { services, skills, works } from './data';
+import { skills, works } from './data';
+
+const routeContext = createContext('/');
 
 const navItems = [
   ['Home', '/'],
@@ -25,26 +28,57 @@ const navItems = [
   ['Contact', '/contact'],
 ];
 
-const RouteContext = createContext('/');
+const services = [
+  {
+    title: 'Security',
+    content: 'Strict security system.',
+    items: [
+      'Per User Permissions',
+      'Communication encryption',
+      'Personal information security',
+    ],
+    icon: ShieldCheck,
+  },
+  {
+    title: 'Mobile Applications',
+    content: 'Mobile convenience features.',
+    items: ['Simple operation'],
+    icon: MonitorSmartphone,
+  },
+  {
+    title: 'UX & UI Design',
+    content: 'Neat design.',
+    items: ['Easy to see UI UX', 'Preferred design'],
+    icon: Image,
+  },
+  {
+    title: 'Light',
+    content: 'Fast and light.',
+    items: ['Smooth movement'],
+    icon: Feather,
+  },
+];
 
-function getHashPath() {
+function getRoute() {
   return window.location.hash.replace(/^#/, '') || '/';
 }
 
 function Router({ children }) {
-  const [path, setPath] = useState(getHashPath);
+  const [route, setRoute] = useState(getRoute);
 
   useEffect(() => {
-    const handleHashChange = () => setPath(getHashPath());
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    const onHashChange = () => setRoute(getRoute());
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  return <RouteContext.Provider value={path}>{children}</RouteContext.Provider>;
+  return (
+    <routeContext.Provider value={route}>{children}</routeContext.Provider>
+  );
 }
 
-function useLocation() {
-  return { pathname: useContext(RouteContext) };
+function useRoute() {
+  return useContext(routeContext);
 }
 
 function Link({ to, children, ...props }) {
@@ -55,256 +89,241 @@ function Link({ to, children, ...props }) {
   );
 }
 
-function NavLink({ to, end = false, className, children }) {
-  const { pathname } = useLocation();
-  const isActive = end ? pathname === to : pathname.startsWith(to);
-
-  return (
-    <Link
-      to={to}
-      aria-current={isActive ? 'page' : undefined}
-      className={
-        typeof className === 'function' ? className({ isActive }) : className
-      }
-    >
-      {children}
-    </Link>
-  );
-}
-
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const route = useRoute();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [pathname]);
+  }, [route]);
 
   return null;
 }
 
-function Layout({ children }) {
+function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
+  const route = useRoute();
 
   useEffect(() => {
     setMenuOpen(false);
-  }, [location.pathname]);
+  }, [route]);
 
   return (
-    <div className="min-h-screen bg-white text-ink">
+    <>
       <div
-        id="site-menu"
+        id="main-navbar"
         aria-hidden={!menuOpen}
         inert={!menuOpen}
-        className={`grid overflow-hidden bg-ink text-white transition-[grid-template-rows] duration-500 ease-out ${
+        className={`grid overflow-hidden bg-ink text-white transition-[grid-template-rows] duration-300 ${
           menuOpen
             ? 'visible grid-rows-[1fr]'
             : 'invisible grid-rows-[0fr] pointer-events-none'
         }`}
       >
         <div className="min-h-0">
-          <div className="page-container grid gap-12 py-10 md:grid-cols-[160px_1fr_280px] md:py-14">
-            <nav aria-label="Main menu">
-              <ul className="space-y-2">
-                {navItems.map(([label, path]) => (
-                  <li key={path}>
-                    <NavLink
-                      to={path}
-                      end={path === '/'}
-                      className={({ isActive }) =>
-                        `inline-block py-1 font-heading text-xl text-white decoration-1 underline-offset-4 transition-opacity hover:opacity-100 ${
-                          isActive ? 'underline opacity-100' : 'opacity-65'
-                        }`
-                      }
-                    >
-                      {label}
-                    </NavLink>
-                  </li>
-                ))}
+          <div className="site-container grid gap-10 py-8 md:grid-cols-12 md:py-14">
+            <nav className="md:col-span-2" aria-label="Main menu">
+              <ul className="space-y-0">
+                {navItems.map(([label, path]) => {
+                  const active =
+                    path === '/' ? route === '/' : route.startsWith(path);
+                  return (
+                    <li key={path} className="text-xl">
+                      <Link
+                        to={path}
+                        aria-current={active ? 'page' : undefined}
+                        className={`inline-block py-1.5 text-white ${
+                          active ? 'underline' : ''
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
 
-            <div className="hidden items-start gap-4 pt-1 text-white/60 md:flex">
-              <MessageCircle className="mt-1 size-5 shrink-0 text-white" />
-              <p className="max-w-sm text-lg leading-relaxed">
-                작은 아이디어도 편하게 이야기해 주세요.
-                <br />
-                <a
-                  href="https://open.kakao.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white underline decoration-white/40 underline-offset-4"
-                >
-                  Kakao Talk
-                </a>
+            <div className="hidden md:col-span-6 md:flex md:gap-4">
+              <MessageCircle className="mt-2 size-5 shrink-0" />
+              <p className="text-white/60">
+                <em>
+                  Team Bonjin.
+                  <br />
+                  <a
+                    href="https://open.kakao.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-white/70 hover:text-white"
+                  >
+                    Kakao Talk
+                  </a>
+                </em>
               </p>
             </div>
 
-            <div className="hidden md:block">
-              <p className="mb-3 font-heading text-xl text-white">Hire us</p>
-              <p className="mb-3 leading-relaxed text-white/60">
-                함께 만들고 싶은 서비스가 있다면 이메일을 보내주세요.
+            <div className="hidden md:col-span-4 md:block">
+              <h2 className="mb-2 font-heading text-xl">Hire Me</h2>
+              <p className="text-white/60">
+                Contact by email.
+                <br />
+                <a
+                  href="mailto:bonjin.app@gmail.com"
+                  className="text-white/70 hover:text-white"
+                >
+                  bonjin.app@gmail.com
+                </a>
               </p>
-              <a
-                href="mailto:bonjin.app@gmail.com"
-                className="text-white underline decoration-white/40 underline-offset-4"
-              >
-                bonjin.app@gmail.com
-              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <header className="page-container flex items-center justify-between pb-8 pt-9 md:pb-12 md:pt-12">
-        <Link
-          to="/"
-          className="font-heading text-2xl font-medium tracking-tight md:text-[1.7rem]"
-        >
-          Bonjin Portfolio<span className="text-signal">.</span>
+      <header className="site-container flex items-start justify-between pt-[50px]">
+        <Link to="/" className="font-heading text-[1.7rem] text-ink">
+          Bonjin Portfolio.
         </Link>
         <button
           type="button"
-          aria-expanded={menuOpen}
-          aria-controls="site-menu"
-          aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
+          className={`burger ${menuOpen ? 'active' : ''}`}
           onClick={() => setMenuOpen((open) => !open)}
-          className="grid size-11 place-items-center transition-transform hover:scale-105"
+          aria-controls="main-navbar"
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
         >
-          {menuOpen ? <X className="size-7" /> : <Menu className="size-7" />}
+          <span />
         </button>
       </header>
+    </>
+  );
+}
 
-      <main>{children}</main>
-
-      <footer className="page-container mt-12 border-t border-black/10 py-10 md:mt-20 md:flex md:items-center md:justify-between md:py-14">
-        <div>
-          <p className="mb-1 text-sm">
-            © {new Date().getFullYear()} Bonjin. All rights reserved.
-          </p>
-          <p className="text-sm text-muted">Designed and built by Bonjin.</p>
-        </div>
-        <div className="mt-6 flex gap-2 md:mt-0">
-          <SocialLink href="https://github.com/bonjin-app" label="GitHub">
-            <Code2 className="size-4" />
-          </SocialLink>
-          <SocialLink href="https://gigas-blog.tistory.com" label="Blog">
-            <ArrowUpRight className="size-4" />
-          </SocialLink>
-          <SocialLink href="mailto:bonjin.app@gmail.com" label="Email">
-            <Mail className="size-4" />
-          </SocialLink>
-        </div>
-      </footer>
-    </div>
+function Footer() {
+  return (
+    <footer className="site-container pb-16 pt-2 sm:flex sm:items-start sm:justify-between">
+      <div>
+        <p className="mb-1 text-sm">
+          © {new Date().getFullYear()} Copyright Bonjin. All Rights Reserved
+        </p>
+        <p className="text-sm text-[#777]">
+          Designed by{' '}
+          <a
+            href="https://github.com/bonjin-app"
+            target="_blank"
+            rel="noreferrer"
+            className="text-ink"
+          >
+            Bonjin
+          </a>
+        </p>
+      </div>
+      <div className="mt-6 flex gap-1 sm:mt-0">
+        <SocialLink href="https://github.com/bonjin-app" label="GitHub">
+          <Code2 />
+        </SocialLink>
+        <SocialLink href="https://gigas-blog.tistory.com" label="Blog">
+          <Globe2 />
+        </SocialLink>
+        <SocialLink href="mailto:bonjin.app@gmail.com" label="Email">
+          <Mail />
+        </SocialLink>
+      </div>
+    </footer>
   );
 }
 
 function SocialLink({ href, label, children }) {
+  const external = href.startsWith('http');
   return (
     <a
       href={href}
-      target={href.startsWith('http') ? '_blank' : undefined}
-      rel={href.startsWith('http') ? 'noreferrer' : undefined}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noreferrer' : undefined}
       aria-label={label}
-      className="grid size-11 place-items-center rounded-full bg-soft transition-colors hover:bg-ink hover:text-white"
+      className="grid size-[50px] place-items-center rounded-full bg-[#f8f9fa] text-ink"
     >
-      {children}
+      <span className="[&>svg]:size-4">{children}</span>
     </a>
   );
 }
 
-function PageHeading({ eyebrow, title, description }) {
+function Intro({ title, description, className = '' }) {
   return (
-    <div className="mb-12 max-w-2xl animate-rise md:mb-16">
-      {eyebrow && (
-        <p className="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-signal">
-          {eyebrow}
-        </p>
-      )}
-      <h1 className="font-heading text-4xl font-medium leading-[1.1] tracking-tight md:text-6xl">
-        {title}
-      </h1>
-      {description && (
-        <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-          {description}
-        </p>
-      )}
+    <div className={`mb-12 max-w-xl animate-fade-up ${className}`}>
+      <h1 className="mb-2 font-heading text-[2rem] leading-tight">{title}</h1>
+      <p className="text-[#777]">{description}</p>
     </div>
   );
 }
 
-function PortfolioGrid({ compact = false }) {
+function Portfolio({ showIntro = true }) {
   const [filter, setFilter] = useState('All');
-  const filteredWorks = useMemo(
+  const visibleWorks = useMemo(
     () => works.filter((work) => filter === 'All' || work.type === filter),
     [filter],
   );
 
   return (
     <>
-      <div className="mb-8 flex flex-wrap gap-5 md:justify-end">
-        {['All', 'Web', 'App'].map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => setFilter(item)}
-            className={`filter-link ${filter === item ? 'active' : ''}`}
-          >
-            {item}
-          </button>
-        ))}
+      <div className="mb-12 grid items-center gap-6 lg:grid-cols-2">
+        {showIntro ? (
+          <div className="animate-fade-up">
+            <h1 className="mb-2 font-heading text-[2rem] leading-tight">
+              Hey, We are Bonjin Team
+            </h1>
+            <p className="text-[#777]">Professional web & app developer</p>
+          </div>
+        ) : (
+          <div />
+        )}
+        <div className="filters animate-fade-up lg:text-right">
+          {['All', 'Web', 'App'].map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setFilter(item)}
+              className={filter === item ? 'active' : ''}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredWorks.slice(0, compact ? 3 : undefined).map((work, index) => (
-          <WorkCard key={work.slug} work={work} index={index} />
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3">
+        {visibleWorks.map((work) => (
+          <WorkCard key={work.slug} work={work} />
         ))}
       </div>
     </>
   );
 }
 
-function WorkCard({ work, index = 0 }) {
+function WorkCard({ work }) {
   return (
-    <Link
-      to={`/works/${work.slug}`}
-      className="work-card group animate-rise overflow-hidden bg-soft"
-      style={{ animationDelay: `${index * 80}ms` }}
-    >
-      <img
-        src={work.image}
-        alt={`${work.name} project`}
-        className="aspect-[4/3] h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-105"
-      />
-      <span className="absolute inset-0 bg-ink/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <span className="absolute inset-0 grid translate-y-4 place-content-center text-center text-white opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-        <strong className="font-heading text-2xl font-medium">{work.name}</strong>
-        <span className="mt-2 text-xs uppercase tracking-[0.28em]">
-          {work.type}
+    <div className="work-item">
+      <Link to={`/works/${work.slug}`} className="work-wrap">
+        <img src={work.image} alt={`${work.name} project`} />
+        <span className="work-overlay" />
+        <span className="work-info">
+          <strong>{work.name}</strong>
+          <span>{work.type}</span>
         </span>
-      </span>
-    </Link>
+      </Link>
+    </div>
   );
 }
 
-function ServicesGrid({ columns = 4 }) {
+function Services({ wide = false }) {
   return (
-    <div
-      className={`grid gap-x-10 gap-y-12 sm:grid-cols-2 ${
-        columns === 4 ? 'lg:grid-cols-4' : ''
-      }`}
-    >
-      {services.map(({ title, description, items, icon: Icon }) => (
-        <article key={title}>
-          <Icon className="mb-6 size-10 stroke-[1.4]" aria-hidden="true" />
-          <h2 className="mb-3 font-heading text-lg font-semibold">{title}</h2>
-          <p className="mb-5 leading-relaxed text-muted">{description}</p>
-          <ul className="space-y-3">
+    <div className={`grid gap-y-12 sm:grid-cols-2 ${wide ? '' : 'lg:grid-cols-4'}`}>
+      {services.map(({ title, content, items, icon: Icon }) => (
+        <article key={title} className={wide ? 'mb-2 pr-10' : 'pr-8'}>
+          <Icon className="mb-6 size-12 stroke-[1.25]" />
+          <h2 className="mb-2 font-heading text-base font-semibold">{title}</h2>
+          <p className="mb-4 text-[#777]">{content}</p>
+          <ul className="list-line">
             {items.map((item) => (
-              <li key={item} className="flex items-center gap-4 text-sm">
-                <span className="h-px w-3 bg-ink" />
-                {item}
-              </li>
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </article>
@@ -316,134 +335,89 @@ function ServicesGrid({ columns = 4 }) {
 function HomePage() {
   return (
     <>
-      <section className="page-container pb-20 pt-8 md:pb-28 md:pt-16">
-        <div className="grid items-end gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="animate-rise">
-            <p className="mb-5 text-xs font-bold uppercase tracking-[0.24em] text-signal">
-              Web & App Development
-            </p>
-            <h1 className="max-w-4xl font-heading text-5xl font-medium leading-[1.04] tracking-[-0.045em] sm:text-6xl md:text-8xl">
-              Ideas, built
-              <br />
-              with care.
-            </h1>
-          </div>
-          <div className="animate-rise lg:pb-2" style={{ animationDelay: '120ms' }}>
-            <p className="max-w-md text-lg leading-relaxed text-muted">
-              Bonjin은 작은 아이디어를 오래 쓰이는 웹과 앱으로 만듭니다.
-              명확한 설계, 섬세한 디자인, 단단한 기술을 한 흐름으로 연결합니다.
-            </p>
-            <Link
-              to="/contact"
-              className="mt-8 inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-bold uppercase tracking-widest"
-            >
-              Start a project <ArrowUpRight className="size-4" />
-            </Link>
-          </div>
-        </div>
+      <section className="site-section site-container">
+        <Portfolio />
       </section>
 
-      <section className="section-space bg-mist">
-        <div className="page-container">
-          <div className="mb-12 items-end justify-between md:flex">
-            <div>
-              <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-signal">
-                Selected work
-              </p>
-              <h2 className="font-heading text-3xl font-medium tracking-tight md:text-5xl">
-                What we’ve made
-              </h2>
-            </div>
-          </div>
-          <PortfolioGrid />
-        </div>
-      </section>
-
-      <section className="section-space page-container">
-        <div className="mb-14 max-w-xl">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-signal">
-            Capabilities
-          </p>
-          <h2 className="font-heading text-3xl font-medium tracking-tight md:text-5xl">
-            Useful, thoughtful,
-            <br />
-            and made to last.
-          </h2>
-        </div>
-        <ServicesGrid />
-      </section>
-
-      <section className="section-space bg-ink text-white">
-        <div className="page-container grid gap-12 md:grid-cols-[0.8fr_1.2fr] md:items-center">
-          <img
-            src="/images/bonjin/logo_transparent.png"
-            alt="Bonjin"
-            className="mx-auto aspect-square w-full max-w-xs rounded-full object-cover"
-          />
-          <blockquote>
-            <p className="font-heading text-3xl font-medium leading-snug md:text-5xl">
-              “평생 공부할 것인가?”
-            </p>
-            <footer className="mt-6 text-sm uppercase tracking-[0.2em] text-white/55">
-              Gigas · Bonjin Team
-            </footer>
-          </blockquote>
-        </div>
-      </section>
-
-      <section className="page-container section-space">
-        <div className="mb-10 text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-signal">
-            Technology used
-          </p>
-        </div>
-        <div className="grid grid-cols-3 items-center gap-6 opacity-60 sm:grid-cols-6">
-          {['adobe', 'apple', 'google', 'netflix', 'nike', 'uber'].map(
-            (brand) => (
+      <section className="site-section site-container">
+        <SectionTitle title="Technology used" subtitle="It uses a variety of techniques." />
+        <div className="grid grid-cols-3 items-center">
+          {['adobe', 'apple', 'google'].map((brand) => (
+            <div key={brand} className="px-4 sm:px-8">
               <img
-                key={brand}
                 src={`/images/logo-${brand}.png`}
                 alt={brand}
-                className="mx-auto max-h-10 w-auto object-contain grayscale"
+                className="mx-auto w-full max-w-[258px]"
               />
-            ),
-          )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="site-section site-container">
+        <SectionTitle
+          title="My Services"
+          subtitle="We have made great service through various technologies."
+        />
+        <Services />
+      </section>
+
+      <section className="site-section site-container">
+        <div className="testimonial-wrap">
+          <img
+            src="/images/man-profile-512x512.png"
+            alt="Gigas profile"
+            className="mx-auto mb-7 size-[120px] rounded-full object-cover"
+          />
+          <blockquote className="mb-4 text-xl">
+            <p>“Will you study for life?”</p>
+          </blockquote>
+          <p>GIGAS</p>
+          <div className="mt-7 flex justify-center gap-2" aria-hidden="true">
+            <span className="size-[7px] rounded-full bg-ink" />
+            <span className="size-[7px] rounded-full bg-[#cbd3da]" />
+          </div>
         </div>
       </section>
     </>
   );
 }
 
+function SectionTitle({ title, subtitle }) {
+  return (
+    <div className="mx-auto mb-10 max-w-xl text-center">
+      <h2 className="mb-2 font-heading text-[28px]">{title}</h2>
+      <p className="text-[#777]">{subtitle}</p>
+    </div>
+  );
+}
+
 function AboutPage() {
   return (
-    <section className="page-container section-space pt-8">
-      <PageHeading
-        eyebrow="About"
-        title="We solve problems through design and code."
-        description="웹과 앱을 만들고, 더 나은 방법을 발견할 때까지 적극적으로 문제를 풀어갑니다."
+    <section className="site-section site-container">
+      <Intro
+        title="About Me"
+        description="I am a web & app developer. We actively solve problems."
       />
-      <div className="grid gap-14 lg:grid-cols-[1.25fr_0.75fr] lg:items-start">
-        <div className="overflow-hidden bg-soft">
+      <div className="grid gap-12 md:grid-cols-12">
+        <div className="md:col-span-7">
           <img
             src="/images/man-profile-512x512.png"
             alt="Bonjin developer profile"
-            className="aspect-[4/3] w-full object-cover object-top"
+            className="w-full"
           />
         </div>
-        <div>
-          <h2 className="mb-8 font-heading text-2xl font-medium">Skills</h2>
-          <ul className="space-y-6">
+        <div className="md:col-span-4 md:col-start-9">
+          <h2 className="mb-6 font-heading text-xl">Skills</h2>
+          <ul className="space-y-5">
             {skills.map(([skill, progress]) => (
               <li key={skill}>
-                <div className="mb-2 flex justify-between text-sm font-semibold">
-                  <span>{skill}</span>
+                <div className="mb-1 flex justify-between">
+                  <strong>{skill}</strong>
                   <span>{progress}%</span>
                 </div>
-                <div className="h-1.5 bg-soft">
-                  <div
-                    className="h-full bg-ink"
-                    style={{ width: `${progress}%` }}
-                  />
+                <div className="h-[7px] bg-[#e9ecef]">
+                  <div className="h-full bg-black" style={{ width: `${progress}%` }} />
                 </div>
               </li>
             ))}
@@ -456,14 +430,13 @@ function AboutPage() {
 
 function ServicesPage() {
   return (
-    <section className="page-container section-space pt-8">
-      <PageHeading
-        eyebrow="Services"
-        title="From a rough idea to a polished product."
-        description="다양한 기술을 목적에 맞게 선택해, 쓰기 편하고 운영하기 좋은 서비스를 만듭니다."
+    <section className="site-section site-container">
+      <Intro
+        title="My Services"
+        description="We have made great service through various technologies."
       />
-      <div className="border-t border-black/10 pt-14">
-        <ServicesGrid columns={2} />
+      <div className="pt-12">
+        <Services wide />
       </div>
     </section>
   );
@@ -471,13 +444,8 @@ function ServicesPage() {
 
 function WorksPage() {
   return (
-    <section className="page-container section-space pt-8">
-      <PageHeading
-        eyebrow="Works"
-        title="A selection of web and app projects."
-        description="아이디어를 실제 서비스로 연결하며 쌓아온 Bonjin의 작업입니다."
-      />
-      <PortfolioGrid />
+    <section className="site-section site-container">
+      <Portfolio />
     </section>
   );
 }
@@ -489,58 +457,45 @@ function WorkDetailPage({ slug }) {
     return <NotFoundPage />;
   }
 
-  const moreWorks = works.filter((item) => item.slug !== slug).slice(0, 3);
-
   return (
-    <section className="page-container section-space pt-8">
-      <Link
-        to="/works"
-        className="mb-10 inline-flex items-center gap-2 text-sm font-semibold"
-      >
-        <ArrowLeft className="size-4" /> Back to works
-      </Link>
-      <div className="grid gap-12 lg:grid-cols-[1.35fr_0.65fr]">
-        <img
-          src={work.image}
-          alt={`${work.name} project`}
-          className="aspect-[4/3] w-full bg-soft object-cover"
-        />
-        <aside className="lg:sticky lg:top-10 lg:self-start">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-signal">
-            {work.type} project
-          </p>
-          <h1 className="font-heading text-4xl font-medium tracking-tight">
-            {work.name}
-          </h1>
-          <p className="mt-6 leading-relaxed text-muted">{work.description}</p>
-          <h2 className="mb-4 mt-10 font-heading text-lg font-semibold">
-            What we did
-          </h2>
-          <ul className="space-y-3">
-            {work.technologies.map((technology) => (
-              <li key={technology} className="flex items-center gap-4 text-sm">
-                <span className="h-px w-3 bg-ink" />
-                {technology}
-              </li>
-            ))}
-          </ul>
-          <a
-            href={work.site}
-            target="_blank"
-            rel="noreferrer"
-            className="button-outline mt-10"
-          >
-            Visit website <ArrowUpRight className="size-4" />
-          </a>
+    <section className="site-section site-container">
+      <Intro title="Work Detail Page" description="Job details page." />
+      <div className="grid gap-10 md:grid-cols-12">
+        <div className="md:col-span-8">
+          <img src={work.image} alt={`${work.name} project`} className="w-full" />
+        </div>
+        <aside className="md:col-span-3 md:col-start-10">
+          <div className="md:sticky md:top-0">
+            <h1 className="mb-1 font-heading text-xl">{work.name}</h1>
+            <p className="mb-6 text-[#777]">{work.type}</p>
+            <p className="mb-8 text-[#777]">{work.description}</p>
+            <h2 className="mb-4 font-heading text-base font-semibold">What I did</h2>
+            <ul className="list-line mb-8">
+              {work.technologies.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <a
+              href={work.site}
+              target="_blank"
+              rel="noreferrer"
+              className="readmore"
+            >
+              Visit Website
+            </a>
+          </div>
         </aside>
       </div>
 
-      <div className="mt-24 border-t border-black/10 pt-14">
-        <h2 className="mb-10 font-heading text-3xl font-medium">More works</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {moreWorks.map((item, index) => (
-            <WorkCard key={item.slug} work={item} index={index} />
-          ))}
+      <div className="pt-28">
+        <SectionTitle title="More Works" subtitle="Other works." />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3">
+          {works
+            .filter((item) => item.slug !== slug)
+            .slice(0, 3)
+            .map((item) => (
+              <WorkCard key={item.slug} work={item} />
+            ))}
         </div>
       </div>
     </section>
@@ -548,59 +503,50 @@ function WorkDetailPage({ slug }) {
 }
 
 function ContactPage() {
-  const [sent, setSent] = useState(false);
+  const [ready, setReady] = useState(false);
 
-  function handleSubmit(event) {
+  function submit(event) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const subject = encodeURIComponent(formData.get('subject'));
+    const data = new FormData(event.currentTarget);
+    const subject = encodeURIComponent(data.get('subject'));
     const body = encodeURIComponent(
-      `Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\n\n${formData.get('message')}`,
+      `Name: ${data.get('name')}\nEmail: ${data.get('email')}\n\n${data.get('message')}`,
     );
-
-    setSent(true);
+    setReady(true);
     window.location.href = `mailto:bonjin.app@gmail.com?subject=${subject}&body=${body}`;
   }
 
   return (
-    <section className="page-container section-space pt-8">
-      <PageHeading
-        eyebrow="Contact"
-        title="Let’s make something useful together."
-        description="프로젝트에 대한 간단한 이야기만 들려주세요. 다음 단계를 함께 정리해 드립니다."
-      />
-      <div className="grid gap-14 lg:grid-cols-[1.25fr_0.75fr]">
-        <form onSubmit={handleSubmit} className="grid gap-6 sm:grid-cols-2">
-          <label className="form-field">
-            <span>Name</span>
-            <input name="name" type="text" required />
-          </label>
-          <label className="form-field">
-            <span>Email</span>
-            <input name="email" type="email" required />
-          </label>
-          <label className="form-field sm:col-span-2">
-            <span>Subject</span>
-            <input name="subject" type="text" required />
-          </label>
-          <label className="form-field sm:col-span-2">
-            <span>Message</span>
-            <textarea name="message" rows="7" required />
-          </label>
-          <div className="sm:col-span-2">
-            <button type="submit" className="button-outline">
-              Send message <Mail className="size-4" />
-            </button>
-            {sent && (
-              <p className="mt-4 text-sm text-muted">
-                이메일 앱이 열립니다. 작성된 내용을 확인한 뒤 전송해 주세요.
-              </p>
-            )}
+    <section className="site-section site-container">
+      <Intro title="Contact" description="Please contact" />
+      <div className="grid gap-12 md:grid-cols-12">
+        <form onSubmit={submit} className="md:col-span-6">
+          <div className="grid gap-x-6 sm:grid-cols-2">
+            <FormField label="Name">
+              <input name="name" type="text" required />
+            </FormField>
+            <FormField label="Email">
+              <input name="email" type="email" required />
+            </FormField>
           </div>
+          <FormField label="Subject">
+            <input name="subject" type="text" required />
+          </FormField>
+          <FormField label="Message">
+            <textarea name="message" rows="10" required />
+          </FormField>
+          <button type="submit" className="readmore w-full sm:w-auto">
+            Send Message
+          </button>
+          {ready && (
+            <p className="mt-4 text-sm text-[#777]">
+              이메일 앱에서 내용을 확인한 후 전송해 주세요.
+            </p>
+          )}
         </form>
 
-        <aside className="space-y-8 lg:pl-10">
-          <ContactItem label="Blog">
+        <aside className="md:col-span-4 md:col-start-9">
+          <ContactItem title="Blog">
             <a
               href="https://gigas-blog.tistory.com"
               target="_blank"
@@ -609,79 +555,67 @@ function ContactPage() {
               gigas-blog.tistory.com
             </a>
           </ContactItem>
-          <ContactItem label="Phone">+82 10 5054 5654</ContactItem>
-          <ContactItem label="Email">
-            <a href="mailto:bonjin.app@gmail.com">bonjin.app@gmail.com</a>
-          </ContactItem>
-          <div className="flex gap-2 pt-4">
-            <SocialLink href="https://github.com/bonjin-app" label="GitHub">
-              <Code2 className="size-4" />
-            </SocialLink>
-            <SocialLink href="https://www.instagram.com" label="Instagram">
-              <Camera className="size-4" />
-            </SocialLink>
-          </div>
+          <ContactItem title="Phone">+82 10 5054 5654</ContactItem>
+          <ContactItem title="Email">bonjin.app@gmail.com</ContactItem>
         </aside>
       </div>
     </section>
   );
 }
 
-function ContactItem({ label, children }) {
+function FormField({ label, children }) {
   return (
-    <div>
-      <p className="mb-2 font-heading text-sm font-semibold">{label}</p>
-      <div className="text-lg text-muted">{children}</div>
+    <label className="mb-5 block">
+      <span className="mb-2 block">{label}</span>
+      <span className="form-control">{children}</span>
+    </label>
+  );
+}
+
+function ContactItem({ title, children }) {
+  return (
+    <div className="mb-5">
+      <strong className="mb-1 block">{title}</strong>
+      <span className="text-[#777]">{children}</span>
     </div>
   );
 }
 
 function NotFoundPage() {
   return (
-    <section className="page-container section-space pt-8 text-center">
-      <p className="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-signal">
-        404
-      </p>
-      <h1 className="font-heading text-5xl font-medium">Page not found.</h1>
-      <Link to="/" className="button-outline mt-10">
-        Back home <ArrowLeft className="size-4" />
+    <section className="site-section site-container text-center">
+      <p className="mb-2 text-[#777]">404</p>
+      <h1 className="mb-8 font-heading text-[2rem]">Page not found.</h1>
+      <Link to="/" className="readmore">
+        <ArrowLeft className="mr-2 inline size-4" /> Back Home
       </Link>
     </section>
   );
 }
 
+function CurrentPage() {
+  const route = useRoute();
+
+  if (route === '/') return <HomePage />;
+  if (route === '/about') return <AboutPage />;
+  if (route === '/services') return <ServicesPage />;
+  if (route === '/works') return <WorksPage />;
+  if (route.startsWith('/works/')) {
+    return <WorkDetailPage slug={route.slice('/works/'.length)} />;
+  }
+  if (route === '/contact') return <ContactPage />;
+  return <NotFoundPage />;
+}
+
 export default function App() {
   return (
     <Router>
-      <AppContent />
-    </Router>
-  );
-}
-
-function AppContent() {
-  const { pathname } = useLocation();
-  let page;
-
-  if (pathname === '/') {
-    page = <HomePage />;
-  } else if (pathname === '/about') {
-    page = <AboutPage />;
-  } else if (pathname === '/services') {
-    page = <ServicesPage />;
-  } else if (pathname === '/works') {
-    page = <WorksPage />;
-  } else if (pathname.startsWith('/works/')) {
-    page = <WorkDetailPage slug={pathname.slice('/works/'.length)} />;
-  } else if (pathname === '/contact') {
-    page = <ContactPage />;
-  } else {
-    page = <NotFoundPage />;
-  }
-
-  return (
-    <Layout>
       <ScrollToTop />
-      {page}
-    </Layout>
+      <Header />
+      <main>
+        <CurrentPage />
+      </main>
+      <Footer />
+    </Router>
   );
 }

@@ -68,10 +68,10 @@ export const services = [
 
 export const skills = [
   ['Java & Spring', 100],
-  ['Swift & iOS', 94],
-  ['Flutter', 92],
-  ['SQL & Data', 90],
-  ['HTML & CSS', 96],
-  ['JavaScript & React', 94],
-  ['UI Design', 88],
+  ['Swift & iOS', 100],
+  ['Flutter', 100],
+  ['SQL & Data', 100],
+  ['HTML5 / CSS3', 100],
+  ['JavaScript', 100],
+  ['PhotoShop', 100],
 ];
