@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0d1e2d;
+  --color-muted: #63707c;
+  --color-soft: #f3f5f6;
+  --color-mist: #f8f9fa;
+  --color-signal: #e66a41;
+  --font-heading: "Raleway", sans-serif;
+  --font-mono: "Inconsolata", monospace;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: white;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a,
+  button,
+  input,
+  textarea {
+    outline-offset: 4px;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: white;
+  }
+}
+
+@layer components {
+  .page-container {
+    width: min(100% - 2.5rem, 1120px);
+    margin-inline: auto;
+  }
+
+  .section-space {
+    padding-block: 6rem;
+  }
+
+  .filter-link {
+    position: relative;
+    padding-block: 0.25rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  .filter-link::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    content: "";
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transition: transform 200ms ease;
+  }
+
+  .filter-link:hover,
+  .filter-link.active {
+    color: var(--color-ink);
+  }
+
+  .filter-link:hover::after,
+  .filter-link.active::after {
+    transform: scaleX(1);
+  }
+
+  .work-card {
+    position: relative;
+    display: block;
+  }
+
+  .button-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1px solid var(--color-ink);
+    padding: 0.85rem 1.1rem;
+    color: var(--color-ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition:
+      color 180ms ease,
+      background 180ms ease;
+  }
+
+  .button-outline:hover {
+    background: var(--color-ink);
+    color: white;
+  }
+
+  .form-field {
+    display: grid;
+    gap: 0.55rem;
+    color: var(--color-ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .form-field input,
+  .form-field textarea {
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 0;
+    background: var(--color-mist);
+    padding: 0.9rem 1rem;
+    color: var(--color-ink);
+    font-weight: 400;
+    transition:
+      border-color 180ms ease,
+      background 180ms ease;
+  }
+
+  .form-field input:focus,
+  .form-field textarea:focus {
+    border-color: color-mix(in srgb, var(--color-ink) 35%, transparent);
+    background: var(--color-soft);
+    outline: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise 650ms both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (max-width: 640px) {
+  .page-container {
+    width: min(100% - 2rem, 1120px);
+  }
+
+  .section-space {
+    padding-block: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
